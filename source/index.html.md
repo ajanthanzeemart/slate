@@ -25,18 +25,22 @@ We have language bindings in Java! You can view code examples in the dark area t
 curl "https://staging-zm-authserv.herokuapp.com/services/user"
   -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierIds: SAAAA"  -H "outletIds: OAAAA,OAAAB"
 ```
-Allows authorized users to create new users for their Outlets or Suppliers. This API takes users basic details and register email as ZeemartId. If user’s email is already available as ZeemartId, it will update the basic details and add the Outlet/Supplier code. By default, the newly created user is Deactivated.
+Allows authorized users to create new users for their Outlets or Suppliers. This API takes users basic details and register email as ZeemartId. If user’s email is already available as ZeemartId, it will update the basic details and add the Outlet/Supplier code. By default, the newly created user is Inactive.
 
 If the creation is successful, the system will send an email to registered email with the verification code to activate the new user account.  
 
 ### HTTP Request
 `POST https://staging-zm-authserv.herokuapp.com/services/user`
-> Request body for the above request is structured like this (JSON):
+> Request body for the Buyer user creation (JSON):
 
 ```json
 [
   {
     "ZeemartId": "newuser@zeemart.asia",
+    "type": "buyer",
+    "companyRegNo": "companyRegNo",
+    "isAdmin": true,
+    "outletIds": ["OAAAA", "OAAAB"],
     "communicationId": "communicate@supplier.com",
     "firstName": "Roy",
     "lastName": "Wu",
@@ -46,6 +50,43 @@ If the creation is successful, the system will send an email to registered email
   },
   {
     "ZeemartId": "secondUser@zeemart.asia",
+    "type": "buyer",
+    "companyRegNo": "companyRegNo",
+    "isAdmin": false,
+    "outletIds": ["OAAAC", "OAADB"],
+    "communicationId": "communicate@supplier.com",
+    "firstName": "Roy2",
+    "lastName": "Wu2",
+    "position": "manager",
+    "phoneNumber": "+1234567890",
+    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  }
+]
+```
+
+> Request body for the Supplier user creation (JSON):
+
+```json
+[
+  {
+    "ZeemartId": "newuser@zeemart.asia",
+    "type": "supplier",
+    "companyRegNo": "companyRegNo",
+    "isAdmin": true,
+    "supplierId": "SAADB",
+    "communicationId": "communicate@supplier.com",
+    "firstName": "Roy",
+    "lastName": "Wu",
+    "position": "Outlet manager",
+    "phoneNumber": "+1234567890",
+    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  },
+  {
+    "ZeemartId": "secondUser@zeemart.asia",
+    "type": "supplier",
+    "companyRegNo": "companyRegNo",
+    "isAdmin": false,
+    "supplierId": "SAAAA",
     "communicationId": "communicate@supplier.com",
     "firstName": "Roy2",
     "lastName": "Wu2",
@@ -57,7 +98,7 @@ If the creation is successful, the system will send an email to registered email
 ```
 #### Request Headers
 Header | Value | Description
---------- | -------- | ------------
+------ | ----- | -----------
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
@@ -68,8 +109,13 @@ Either supplierIds or outletIds will be available.
 
 #### Request Body description
 Parameter Name | Value | Mandatory? | Description
---------- | --------- | ---------- | --------
+-------------- | ----- | ---------- | -----------
 ZeemartId | newuser@zeemart.asia | Y | new User's ZeemartId <email>
+type | buyer | Y | type of the user ie. [buyer, supplier]
+companyRegNo | Z12345678 | Y | company registered number
+isAdmin | false | N | To make the user as company admin make it true. default false.
+outletIds | OAAAA | Y/N | If type is buyer then this field is Mandatory. Comma separated values
+supplierId | SAAAA | Y/N | if type is supplier then this field is Mandatory
 firstName | "Roy" |	Y	| First name of the new user
 lastName | "Wu" | Y |	Last name of new user
 position | "Assistant Manager" | Y | Position of the user
@@ -87,7 +133,6 @@ imageURL | "https://www.clinicaledge.co/img/blank_user.jpg" | N | Link to upload
       "ZeemartId" : "newuser@zeemart.asia",
       "status" : "success"
     },{
-      "id": "59d1f28a8f715ee9af02dfba",
       "ZeemartId" : "secondUser@zeemart.asia",
       "status" : "failure"
     }
@@ -116,13 +161,15 @@ Error Code | Reason
 ## View List of Users
 ```shell
 curl "https://staging-zm-authserv.herokuapp.com/services/users"
-  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierIds: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 To list down all the users or filter out the users or paginate the users.  
+User will have the company names according to the Suppliers or Outlets they linked to.
+If same user have Supplier and Outlet then the user will be split in to supplier user and buyer user
 
 ### HTTP Request
 
-`GET https://staging-zm-authserv.herokuapp.com/services/users?searchName=<searchName>&sortBy=<columnName>&sort=<asc|desc>`
+`GET https://staging-zm-authserv.herokuapp.com/services/users?searchName=<searchName>&companyRegNo=<companyRegNo>&sortBy=<columnName>&sort=<asc|desc>`
 
 #### Request Headers
 Header | Value | Description
@@ -136,10 +183,11 @@ outletIds | OAAAA,OAAAB | Selected Outlet Ids
 #### Request Query description
 Parameter Name | Value | Mandatory? | Description
 -------------- | ----- | ---------- | -----------
-searchName | "Ajan" | N | Search key for search by firstName and lastName
-status | "A" | N | Values ["A", "D", "I"]
-sortBy | "firstName"	| N |	OrderBy column [firstName,lastName]
-sort | "asc" |	N	| Values [asc,desc]
+searchName | Ajan | N | Search key for search by firstName and lastName
+companyRegNo | Z12345678 | N | companyRegNo corresponding the companyName selected
+status | A | N | Values ["A" - Active, "I" - Inactive, "D" - Deleted]
+sortBy | firstName	| N |	OrderBy column [firstName|lastName]
+sort | asc |	N	| Values [asc|desc]
 startPage | 1 | N |	If pagination start page number
 pageSize | 25 | N | Number of records per page
 
@@ -150,27 +198,36 @@ pageSize | 25 | N | Number of records per page
 [
   {
     "id": "59d1f28a8f715ee9af02dfba",
+    "ZeemartId": "newUser@zeemart.asia",
     "authType": "Zeemart",
-    "outletId": ["OAAAA","OAAAB"],
-    "supplierId": ["SAAAA"],
+    "companyName": "Pasta salsa Pte Ltd",
+    "outletIds": ["OAAAA","OAAAB"],
+    "type": "buyer",
     "firstName": "Roy",
     "lastName": "Wu",
-    "status": "A",
-    "phoneNumber": "+1234567890",
-    "position": "Outlet manager",
-    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+    "status": "A"
+  },
+  {
+    "id": "59d1f28a8f715ee9af02dfba",
+    "ZeemartId": "newUser@zeemart.asia",
+    "authType": "Zeemart",
+    "companyName": "Pasta salsa Pte Ltd",
+    "supplierId": "SAAAA",
+    "type": "supplier",
+    "firstName": "Roy",
+    "lastName": "Wu",
+    "status": "A"
   },
   {
     "id": "59d1f28a8f715ee9af02dfbc",
+    "ZeemartId": "secondUser@zeemart.asia",
     "authType": "Zeemart",
-    "outletId": ["OAAAA"],
-    "supplierId": ["SAAAA","SAAAB"],
+    "companyName": "Zee cafe",
+    "supplierId": "SAAAA",
+    "type": "supplier",
     "firstName": "Ajay",
     "lastName": "Siva",
-    "status": "A",
-    "phoneNumber": "+1234567890",
-    "position": "Outlet manager",
-    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+    "status": "A"
   }
 ]
 ```
@@ -194,8 +251,8 @@ Error Code | Reason
 
 ## View Specific User
 ```shell
-curl "https://staging-zm-authserv.herokuapp.com/services/user/id=59d1f28a8f715ee9af02dfba"
-  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
+curl "https://staging-zm-authserv.herokuapp.com/services/user?id=59d1f28a8f715ee9af02dfba"
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierIds: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 To get the specific User details
 
@@ -218,19 +275,71 @@ Parameter Name | Value | Mandatory? | Description
 id | 59d1f28a8f715ee9af02dfba | Y | user Id
 
 ### Response
-> Success response body for the above request is structured like this (JSON):
+> Success response body for buyer (JSON):
 
 ```json
 {
-	"id": "59d1f28a8f715ee9af02dfba",
-	"authType": "Zeemart",
-	"outletId": ["OAAAA"],
-	"supplierId": ["SAAAA", "SAAAB"],
-	"firstName": "User In Zeemart",
-	"lastName": "Wu",
-	"status": "A",
-	"phoneNumber": "+1234567890",
-	"position": "Outlet manager",
+  "id": "59d1f28a8f715ee9af02dfba",
+  "ZeemartId": "secondUser@zeemart.asia",
+  "companyName": "Pasta salsa Pte Ltd",
+  "type": "buyer",
+  "isAdmin": false,
+  "authType": "Zeemart",
+  "outlets": [
+    {
+      "id": "OAAAA",
+      "name": "Balister",
+      "address": {
+        "line1": "34 Jurong Link",
+        "line2": "BLk 301, #4-123",
+        "country": "Singapore",
+        "postal": "123456"
+      }
+    },
+    {
+      "id": "OAAAB",
+      "name": "Tampanies",
+      "address": {
+        "line1": "34 Tampanies Link",
+        "line2": "BLk 301, #4-123",
+        "country": "Singapore",
+        "postal": "543212"
+      }
+    }],
+  "firstName": "User In Zeemart",
+  "lastName": "Wu",
+  "status": "A",
+  "phoneNumber": "+1234567890",
+  "position": "Outlet manager",
+  "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+}
+```
+> Success response body for supplier (JSON):
+
+```json
+{
+  "id": "59d1f28a8f715ee9af02dfba",
+  "ZeemartId": "secondUser@zeemart.asia",
+  "companyName": "Pasta salsa Pte Ltd",
+  "type": "supplier",
+  "isAdmin": false,
+  "authType": "Zeemart",
+  "supplier":
+  {
+    "id": "SAAAB",
+    "name": "Tampanies",
+    "address": {
+      "line1": "34 Tampanies Link",
+      "line2": "BLk 301, #4-123",
+      "country": "Singapore",
+      "postal": "543212"
+    }
+  },
+  "firstName": "User In Zeemart",
+  "lastName": "Wu",
+  "status": "A",
+  "phoneNumber": "+1234567890",
+  "position": "Outlet manager",
   "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
 }
 ```
@@ -252,12 +361,12 @@ Error Code | Reason
 403 | If permissions are denied for this user for the action
 
 
-## Update / Edit User
+## Edit User
 ```shell
 curl "https://staging-zm-authserv.herokuapp.com/services/user"
   -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
-Update the existing user's details  
+Update the existing user's details. Only the fields sent will be updated.
 
 ### HTTP Request
 `PUT https://staging-zm-authserv.herokuapp.com/services/user`
@@ -267,9 +376,10 @@ Update the existing user's details
 [
   {
     "id": "59d1f28a8f715ee9af02dfba",
-    "ZeemartId": "newuser@zeemart.asia",
+    "status": "A",
+    "isAdmin": true,
     "outletId": ["OAAAA","OAAAB"],
-    "supplierId": ["SAAAA", "SAAAB"],
+    "supplierId": "SAAAA",
     "communicationId": "communicate@supplier.com",
     "firstName": "Roy",
     "lastName": "Wu",
@@ -279,9 +389,10 @@ Update the existing user's details
   },
   {
     "id": "59d1f28a8f715ee9af02dfbc",
-    "ZeemartId": "secondUser@zeemart.asia",
-    "outletId": ["OAAAA","OAAAB"],
-    "supplierId": ["SAAAA", "SAAAB"],
+    "status": "I",
+    "isAdmin": false,
+    "outletIds": ["OAAAA","OAAAB"],
+    "supplierId": "SAAAA",
     "communicationId": "communicate@supplier.com",
     "firstName": "Roy2",
     "lastName": "Wu2",
@@ -293,7 +404,7 @@ Update the existing user's details
 ```
 #### Request Headers
 Header | Value | Description
---------- | -------- | ------------
+------ | ----- | -----------
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
@@ -302,14 +413,15 @@ outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
 #### Request Body description
 Parameter Name | Value | Mandatory? | Description
---------- | --------- | ---------- | --------
+-------------- | ----- | ---------- | -----------
 id | 59d1f28a8f715ee9af02dfba | Y | user Id
-ZeemartId | newuser@zeemart.asia | Y | new User's ZeemartId <email>
-outletId | ["OAAAA"] | Y | Linked OutletIds
-supplierId | ["SAAAA"]	| Y |	Linked SupplierIds
-firstName | "Roy1" |	Y	| First name of the new user
-lastName | "Wu1" | Y |	Last name of new user
-position | "Assistant Manager" | Y | Position of the user
+status | A | N | Active or innactive user
+isAdmin | true | N | true or false - is admin of the company?
+outletId | ["OAAAA"] | N | Linked OutletIds
+supplierId | ["SAAAA"]	| N |	Linked SupplierIds
+firstName | "Roy1" |	N	| First name of the new user
+lastName | "Wu1" | N |	Last name of new user
+position | "Assistant Manager" | N | Position of the user
 phoneNumber |	"+1234567890" | N | Mobile phone
 imageURL | "https://www.clinicaledge.co/img/blank_user.jpg" | N | Link to uploaded profile image
 
@@ -351,7 +463,7 @@ Error Code | Reason
 ## Delete User
 ```shell
 curl "https://staging-zm-authserv.herokuapp.com/services/user?ids=59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfba"
-  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierIds: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 Update the existing user's details  
 
@@ -359,6 +471,14 @@ Update the existing user's details
 `DELETE https://staging-zm-authserv.herokuapp.com/services/user?ids=59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfba`
 > Request body for the above request is structured like this (JSON):
 
+```json
+[
+  "59d1f28a8f715ee9af02dfba",
+  "59d1f28a8f715ee9af02dfbc",
+  "59d1f28a8f715ee9af02dfbb"
+]
+
+```
 #### Request Headers
 Header | Value | Description
 --------- | -------- | ------------
@@ -368,10 +488,10 @@ mudra | mudra-token | Taken from Login
 supplierIds | SAAAA,SAAAB | Selected Supplier Ids
 outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
-#### Request Query description
+#### Request Body description
 Parameter Name | Value | Mandatory? | Description
 --------- | --------- | ---------- | --------
-ids | 59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfbc,59d1f28a8f715ee9af02dfbb | Y | selected user Ids comma separated
+ | ["59d1f28a8f715ee9af02dfba", "59d1f28a8f715ee9af02dfbb"]  | Y | selected user Ids as JSON array
 
 ### Response
 > Full|partial success response body for the above request is structured like this (JSON):
