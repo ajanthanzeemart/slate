@@ -350,7 +350,7 @@ Error Code | Reason
 
 ## Delete User
 ```shell
-curl "https://staging-zm-authserv.herokuapp.com/services/user?userIds=59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfba"
+curl "https://staging-zm-authserv.herokuapp.com/services/user?ids=59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfba"
   -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 Update the existing user's details  
