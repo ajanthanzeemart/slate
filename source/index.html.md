@@ -23,9 +23,9 @@ We have language bindings in Java! You can view code examples in the dark area t
 ## Create User
 ```shell
 curl "https://staging-zm-authserv.herokuapp.com/services/user"
-  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SupplierId" //Dicussion for param name
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierIds: SAAAA"  -H "outletIds: OAAAA,OAAAB"
 ```
-Allows authorized admins to create new users for their Outlets or Suppliers. Takes users basic details and register email as ZeemartId. If user’s email is already available as ZeemartId, it will update the basic details and add the Outlet/Supplier code. By default, the newly created user is Deactivated.
+Allows authorized users to create new users for their Outlets or Suppliers. This API takes users basic details and register email as ZeemartId. If user’s email is already available as ZeemartId, it will update the basic details and add the Outlet/Supplier code. By default, the newly created user is Deactivated.
 
 If the creation is successful, the system will send an email to registered email with the verification code to activate the new user account.  
 
@@ -34,17 +34,26 @@ If the creation is successful, the system will send an email to registered email
 > Request body for the above request is structured like this (JSON):
 
 ```json
-{
-  "ZeemartId": "newuser@zeemart.asia",
-  "outletId": ["OAAAA"],
-  "supplierId": ["SAAAA"],
-  "communicationId": "communicate@supplier.com",
-  "firstName": "Roy",
-  "lastName": "Wu",
-  "position": "Outlet manager",
-  "phoneNumber": "+1234567890",
-  "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
-}
+[
+  {
+    "ZeemartId": "newuser@zeemart.asia",
+    "communicationId": "communicate@supplier.com",
+    "firstName": "Roy",
+    "lastName": "Wu",
+    "position": "Outlet manager",
+    "phoneNumber": "+1234567890",
+    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  },
+  {
+    "ZeemartId": "secondUser@zeemart.asia",
+    "communicationId": "communicate@supplier.com",
+    "firstName": "Roy2",
+    "lastName": "Wu2",
+    "position": "manager",
+    "phoneNumber": "+1234567890",
+    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  }
+]
 ```
 #### Request Headers
 Header | Value | Description
@@ -52,14 +61,15 @@ Header | Value | Description
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
-supplierId | SupplierId | OutletId or Supplier TeamId
+supplierIds | SAAAA,SAAAB | Selected Supplier Ids for create user
+outletIds | OAAAA,OAAAB | Selected Outlet Ids for create user
+
+Either supplierIds or outletIds will be available.
 
 #### Request Body description
 Parameter Name | Value | Mandatory? | Description
 --------- | --------- | ---------- | --------
 ZeemartId | newuser@zeemart.asia | Y | new User's ZeemartId <email>
-outletId | ["OAAAA"] | Y | if Account type is selected as Buyer then mandatory
-supplierId | ["SAAAA"]	| Y |	if Account type is selected as Supplier then mandatory
 firstName | "Roy" |	Y	| First name of the new user
 lastName | "Wu" | Y |	Last name of new user
 position | "Assistant Manager" | Y | Position of the user
@@ -71,7 +81,18 @@ imageURL | "https://www.clinicaledge.co/img/blank_user.jpg" | N | Link to upload
 
 ```json
 {
-  "status": "success"
+  "result": [
+    {
+      "id": "59d1f28a8f715ee9af02dfba",
+      "ZeemartId" : "newuser@zeemart.asia",
+      "status" : "success"
+    },{
+      "id": "59d1f28a8f715ee9af02dfba",
+      "ZeemartId" : "secondUser@zeemart.asia",
+      "status" : "failure"
+    }
+  ],
+  "status": "success|partial"
 }
 ```
 
@@ -92,19 +113,16 @@ Error Code | Reason
 403 | If permissions are denied for this user for the action
 
 
-## View Users
+## View List of Users
 ```shell
 curl "https://staging-zm-authserv.herokuapp.com/services/users"
-  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SupplierId" //Dicussion for param name
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 To list down all the users or filter out the users or paginate the users.  
 
 ### HTTP Request
-Without query parameters
-`GET https://staging-zm-authserv.herokuapp.com/services/users`
 
-with sample query parameters
-`GET https://staging-zm-authserv.herokuapp.com/services/users?searchName=ajan&outlets=outletId1,outletId2&teams=suplierId1,supplierId2`
+`GET https://staging-zm-authserv.herokuapp.com/services/users?searchName=<searchName>&sortBy=<columnName>&sort=<asc|desc>`
 
 #### Request Headers
 Header | Value | Description
@@ -112,17 +130,16 @@ Header | Value | Description
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
-supplierId | SupplierId | OutletId or SupplierId
+supplierIds | SAAAA,SAAAB | Selected Supplier Ids
+outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
 #### Request Query description
 Parameter Name | Value | Mandatory? | Description
 -------------- | ----- | ---------- | -----------
 searchName | "Ajan" | N | Search key for search by firstName and lastName
-outlets | "OAAAA,OAAAB" | N | Comma separated OutletIds
-suppliers | "SAAAA,SAAAB"  | N | Comma separated SupplierIds
 status | "A" | N | Values ["A", "D", "I"]
-orderBY | "firstName"	| N |	OrderBy column [firstName,lastName]
-sortOrder | "asc" |	N	| Values [asc,desc]
+sortBy | "firstName"	| N |	OrderBy column [firstName,lastName]
+sort | "asc" |	N	| Values [asc,desc]
 startPage | 1 | N |	If pagination start page number
 pageSize | 25 | N | Number of records per page
 
@@ -130,34 +147,31 @@ pageSize | 25 | N | Number of records per page
 > Success response body for the above request is structured like this (JSON):
 
 ```json
-[{
-		"_id": {
-			"id": "59d1f28a8f715ee9af02dfba"
-		},
-		"authType": "Zeemart",
-		"outletId": ["OAAAA"],
-		"supplierId": ["SAAAA"],
-		"firstName": "Roy",
-		"lastName": "Wu",
-		"status": "A",
-		"phoneNumber": "+1234567890",
-		"position": "Outlet manager",
-		"imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
-	},
-	{
-		"_id": {
-			"id": "59d1f28a8f715ee9af02dfbc"
-		},
-		"authType": "Zeemart",
-		"outletId": ["OAAAA"],
-		"supplierId": ["SAAAA"],
-		"firstName": "Ajay",
-		"lastName": "Siva",
-		"status": "A",
-		"phoneNumber": "+1234567890",
-		"position": "Outlet manager",
-		"imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
-	}
+[
+  {
+    "id": "59d1f28a8f715ee9af02dfba",
+    "authType": "Zeemart",
+    "outletId": ["OAAAA","OAAAB"],
+    "supplierId": ["SAAAA"],
+    "firstName": "Roy",
+    "lastName": "Wu",
+    "status": "A",
+    "phoneNumber": "+1234567890",
+    "position": "Outlet manager",
+    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  },
+  {
+    "id": "59d1f28a8f715ee9af02dfbc",
+    "authType": "Zeemart",
+    "outletId": ["OAAAA"],
+    "supplierId": ["SAAAA","SAAAB"],
+    "firstName": "Ajay",
+    "lastName": "Siva",
+    "status": "A",
+    "phoneNumber": "+1234567890",
+    "position": "Outlet manager",
+    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  }
 ]
 ```
 
@@ -178,17 +192,16 @@ Error Code | Reason
 403 | If permissions are denied for this user for the action
 
 
-
 ## View Specific User
 ```shell
-curl "https://staging-zm-authserv.herokuapp.com/services/user/ZeemartId=user@zeemart.asia"
-  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SupplierId" //Dicussion for param name
+curl "https://staging-zm-authserv.herokuapp.com/services/user/id=59d1f28a8f715ee9af02dfba"
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 To get the specific User details
 
 ### HTTP Request
 
-`GET https://staging-zm-authserv.herokuapp.com/services/user/ZeemartId=user@zeemart.asia`
+`GET https://staging-zm-authserv.herokuapp.com/services/user?id=59d1f28a8f715ee9af02dfba`
 
 #### Request Headers
 Header | Value | Description
@@ -196,31 +209,30 @@ Header | Value | Description
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
-supplierId | SupplierId | OutletId or SupplierId
+supplierIds | SAAAA,SAAAB | Selected Supplier Ids
+outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
 #### Request Query description
 Parameter Name | Value | Mandatory? | Description
 -------------- | ----- | ---------- | -----------
-ZeemartId | "user@zeemart.asia" | Y | Get userby Zeemart Id
+id | 59d1f28a8f715ee9af02dfba | Y | user Id
 
 ### Response
 > Success response body for the above request is structured like this (JSON):
 
 ```json
 {
-		"_id": {
-			"id": "59d1f28a8f715ee9af02dfba"
-		},
-		"authType": "Zeemart",
-		"outletId": ["OAAAA"],
-		"supplierId": ["SAAAA"],
-		"firstName": "Userwith ZeemartID",
-		"lastName": "Wu",
-		"status": "A",
-		"phoneNumber": "+1234567890",
-		"position": "Outlet manager",
-		"imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
-	}
+	"id": "59d1f28a8f715ee9af02dfba",
+	"authType": "Zeemart",
+	"outletId": ["OAAAA"],
+	"supplierId": ["SAAAA", "SAAAB"],
+	"firstName": "User In Zeemart",
+	"lastName": "Wu",
+	"status": "A",
+	"phoneNumber": "+1234567890",
+	"position": "Outlet manager",
+  "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+}
 ```
 
 > Failure response body for the above request is structured like this (JSON):
@@ -235,7 +247,7 @@ ZeemartId | "user@zeemart.asia" | Y | Get userby Zeemart Id
 #### Error codes
 
 Error Code | Reason
------------ | -----------
+---------- | ------
 401 | if authentication token not matched
 403 | If permissions are denied for this user for the action
 
@@ -243,7 +255,7 @@ Error Code | Reason
 ## Update / Edit User
 ```shell
 curl "https://staging-zm-authserv.herokuapp.com/services/user"
-  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SupplierId" //Dicussion for param name
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 Update the existing user's details  
 
@@ -252,17 +264,32 @@ Update the existing user's details
 > Request body for the above request is structured like this (JSON):
 
 ```json
-{
-  "ZeemartId": "newuser@zeemart.asia",
-  "outletId": ["OAAAA"],
-  "supplierId": ["SAAAA"],
-  "communicationId": "communicate@supplier.com",
-  "firstName": "Roy",
-  "lastName": "Wu",
-  "position": "Outlet manager",
-  "phoneNumber": "+1234567890",
-  "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
-}
+[
+  {
+    "id": "59d1f28a8f715ee9af02dfba",
+    "ZeemartId": "newuser@zeemart.asia",
+    "outletId": ["OAAAA","OAAAB"],
+    "supplierId": ["SAAAA", "SAAAB"],
+    "communicationId": "communicate@supplier.com",
+    "firstName": "Roy",
+    "lastName": "Wu",
+    "position": "Outlet manager",
+    "phoneNumber": "+1234567890",
+    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  },
+  {
+    "id": "59d1f28a8f715ee9af02dfbc",
+    "ZeemartId": "secondUser@zeemart.asia",
+    "outletId": ["OAAAA","OAAAB"],
+    "supplierId": ["SAAAA", "SAAAB"],
+    "communicationId": "communicate@supplier.com",
+    "firstName": "Roy2",
+    "lastName": "Wu2",
+    "position": "manager",
+    "phoneNumber": "+1234567890",
+    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  }
+]
 ```
 #### Request Headers
 Header | Value | Description
@@ -270,11 +297,13 @@ Header | Value | Description
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
-supplierId | SupplierId | OutletId or Supplier TeamId
+supplierIds | SAAAA,SAAAB | Selected Supplier Ids
+outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
 #### Request Body description
 Parameter Name | Value | Mandatory? | Description
 --------- | --------- | ---------- | --------
+id | 59d1f28a8f715ee9af02dfba | Y | user Id
 ZeemartId | newuser@zeemart.asia | Y | new User's ZeemartId <email>
 outletId | ["OAAAA"] | Y | Linked OutletIds
 supplierId | ["SAAAA"]	| Y |	Linked SupplierIds
@@ -285,11 +314,20 @@ phoneNumber |	"+1234567890" | N | Mobile phone
 imageURL | "https://www.clinicaledge.co/img/blank_user.jpg" | N | Link to uploaded profile image
 
 ### Response
-> Success response body for the above request is structured like this (JSON):
+> Full|Partial Success response body for the above request is structured like this (JSON):
 
 ```json
 {
-  "status": "success"
+  "result": [
+    {
+      "id": "59d1f28a8f715ee9af02dfba",
+      "status": "success"
+    }, {
+      "id": "59d1f28a8f715ee9af02dfbc",
+      "status": "failure"
+    }
+  ],
+  "status": "success|partial"
 }
 ```
 
@@ -312,13 +350,13 @@ Error Code | Reason
 
 ## Delete User
 ```shell
-curl "https://staging-zm-authserv.herokuapp.com/services/user?ZeemartID=user@zeemart.asia"
-  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SupplierId" //Dicussion for param name
+curl "https://staging-zm-authserv.herokuapp.com/services/user?userIds=59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfba"
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 Update the existing user's details  
 
 ### HTTP Request
-`DELETE https://staging-zm-authserv.herokuapp.com/services/user?ZeemartID=user@zeemart.asia`
+`DELETE https://staging-zm-authserv.herokuapp.com/services/user?ids=59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfba`
 > Request body for the above request is structured like this (JSON):
 
 #### Request Headers
@@ -327,19 +365,32 @@ Header | Value | Description
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
-supplierId | SupplierId | OutletId or Supplier TeamId
+supplierIds | SAAAA,SAAAB | Selected Supplier Ids
+outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
 #### Request Query description
 Parameter Name | Value | Mandatory? | Description
 --------- | --------- | ---------- | --------
-ZeemartId | newuser@zeemart.asia | Y | new User's ZeemartId <email>
+ids | 59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfbc,59d1f28a8f715ee9af02dfbb | Y | selected user Ids comma separated
 
 ### Response
-> Success response body for the above request is structured like this (JSON):
+> Full|partial success response body for the above request is structured like this (JSON):
 
 ```json
 {
-  "status": "success"
+  "result": [
+    {
+      "id": "59d1f28a8f715ee9af02dfba",
+      "status": "success"
+    }, {
+      "id": "59d1f28a8f715ee9af02dfbb",
+      "status": "success"
+    }, {
+      "id": "59d1f28a8f715ee9af02dfbc",
+      "status": "failure"
+    }
+  ],
+  "status": "success|partial"
 }
 ```
 
