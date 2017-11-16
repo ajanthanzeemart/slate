@@ -22,7 +22,7 @@ We have language bindings in Java! You can view code examples in the dark area t
 
 ## Create User
 ```shell
-curl "https://staging-zm-authserv.herokuapp.com/services/user"
+curl "https://staging-zm-authserv.herokuapp.com/services/users"
   -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierIds: SAAAA"  -H "outletIds: OAAAA,OAAAB"
 ```
 Allows authorized users to create new users for their Outlets or Suppliers. This API takes users basic details and register email as ZeemartId. If user’s email is already available as ZeemartId, it will update the basic details and add the Outlet/Supplier code. By default, the newly created user is Inactive.
@@ -30,7 +30,7 @@ Allows authorized users to create new users for their Outlets or Suppliers. This
 If the creation is successful, the system will send an email to registered email with the verification code to activate the new user account.  
 
 ### HTTP Request
-`POST https://staging-zm-authserv.herokuapp.com/services/user`
+`POST https://staging-zm-authserv.herokuapp.com/services/users`
 > Request body for the Buyer user creation (JSON):
 
 ```json
@@ -363,13 +363,13 @@ Error Code | Reason
 
 ## Edit User
 ```shell
-curl "https://staging-zm-authserv.herokuapp.com/services/user"
+curl "https://staging-zm-authserv.herokuapp.com/services/users"
   -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 Update the existing user's details. Only the fields sent will be updated.
 
 ### HTTP Request
-`PUT https://staging-zm-authserv.herokuapp.com/services/user`
+`PUT https://staging-zm-authserv.herokuapp.com/services/users`
 > Request body for the above request is structured like this (JSON):
 
 ```json
@@ -462,13 +462,13 @@ Error Code | Reason
 
 ## Delete User
 ```shell
-curl "https://staging-zm-authserv.herokuapp.com/services/user?ids=59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfba"
+curl "https://staging-zm-authserv.herokuapp.com/services/users"
   -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierIds: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 Update the existing user's details  
 
 ### HTTP Request
-`DELETE https://staging-zm-authserv.herokuapp.com/services/user?ids=59d1f28a8f715ee9af02dfba,59d1f28a8f715ee9af02dfba`
+`DELETE https://staging-zm-authserv.herokuapp.com/services/users`
 > Request body for the above request is structured like this (JSON):
 
 ```json
