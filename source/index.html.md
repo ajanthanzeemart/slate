@@ -39,7 +39,6 @@ If the creation is successful, the system will send an email to registered email
     "ZeemartId": "newuser@zeemart.asia",
     "type": "buyer",
     "companyRegNo": "companyRegNo",
-    "isAdmin": true,
     "outletIds": ["OAAAA", "OAAAB"],
     "communicationId": "communicate@supplier.com",
     "firstName": "Roy",
@@ -52,7 +51,6 @@ If the creation is successful, the system will send an email to registered email
     "ZeemartId": "secondUser@zeemart.asia",
     "type": "buyer",
     "companyRegNo": "companyRegNo",
-    "isAdmin": false,
     "outletIds": ["OAAAC", "OAADB"],
     "communicationId": "communicate@supplier.com",
     "firstName": "Roy2",
@@ -72,7 +70,6 @@ If the creation is successful, the system will send an email to registered email
     "ZeemartId": "newuser@zeemart.asia",
     "type": "supplier",
     "companyRegNo": "companyRegNo",
-    "isAdmin": true,
     "supplierId": "SAADB",
     "communicationId": "communicate@supplier.com",
     "firstName": "Roy",
@@ -85,7 +82,6 @@ If the creation is successful, the system will send an email to registered email
     "ZeemartId": "secondUser@zeemart.asia",
     "type": "supplier",
     "companyRegNo": "companyRegNo",
-    "isAdmin": false,
     "supplierId": "SAAAA",
     "communicationId": "communicate@supplier.com",
     "firstName": "Roy2",
@@ -113,7 +109,6 @@ Parameter Name | Value | Mandatory? | Description
 ZeemartId | newuser@zeemart.asia | Y | new User's ZeemartId <email>
 type | buyer | Y | type of the user ie. [buyer, supplier]
 companyRegNo | Z12345678 | Y | company registered number
-isAdmin | false | N | To make the user as company admin make it true. default false.
 outletIds | OAAAA | Y/N | If type is buyer then this field is Mandatory. Comma separated values
 supplierId | SAAAA | Y/N | if type is supplier then this field is Mandatory
 firstName | "Roy" |	Y	| First name of the new user
@@ -283,7 +278,6 @@ id | 59d1f28a8f715ee9af02dfba | Y | user Id
   "ZeemartId": "secondUser@zeemart.asia",
   "companyName": "Pasta salsa Pte Ltd",
   "type": "buyer",
-  /*"isAdmin": false,*/
   "authType": "Zeemart",
   "outlets": [
     {
@@ -322,7 +316,6 @@ id | 59d1f28a8f715ee9af02dfba | Y | user Id
   "ZeemartId": "secondUser@zeemart.asia",
   "companyName": "Pasta salsa Pte Ltd",
   "type": "supplier",
-  /*"isAdmin": false,*/
   "authType": "Zeemart",
   "supplier":
   {
@@ -377,7 +370,6 @@ Update the existing user's details. Only the fields sent will be updated.
   {
     "id": "59d1f28a8f715ee9af02dfba",
     "status": "A",
-    /*"isAdmin": true,*/
     "outletId": ["OAAAA","OAAAB"],
     "supplierId": "SAAAA",
     "communicationId": "communicate@supplier.com",
@@ -390,7 +382,6 @@ Update the existing user's details. Only the fields sent will be updated.
   {
     "id": "59d1f28a8f715ee9af02dfbc",
     "status": "I",
-    /*"isAdmin": false,*/
     "outletIds": ["OAAAA","OAAAB"],
     "supplierId": "SAAAA",
     "communicationId": "communicate@supplier.com",
