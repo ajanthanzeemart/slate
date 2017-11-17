@@ -283,7 +283,7 @@ id | 59d1f28a8f715ee9af02dfba | Y | user Id
   "ZeemartId": "secondUser@zeemart.asia",
   "companyName": "Pasta salsa Pte Ltd",
   "type": "buyer",
-  "isAdmin": false,
+  /*"isAdmin": false,*/
   "authType": "Zeemart",
   "outlets": [
     {
@@ -322,7 +322,7 @@ id | 59d1f28a8f715ee9af02dfba | Y | user Id
   "ZeemartId": "secondUser@zeemart.asia",
   "companyName": "Pasta salsa Pte Ltd",
   "type": "supplier",
-  "isAdmin": false,
+  /*"isAdmin": false,*/
   "authType": "Zeemart",
   "supplier":
   {
@@ -377,7 +377,7 @@ Update the existing user's details. Only the fields sent will be updated.
   {
     "id": "59d1f28a8f715ee9af02dfba",
     "status": "A",
-    "isAdmin": true,
+    /*"isAdmin": true,*/
     "outletId": ["OAAAA","OAAAB"],
     "supplierId": "SAAAA",
     "communicationId": "communicate@supplier.com",
@@ -390,7 +390,7 @@ Update the existing user's details. Only the fields sent will be updated.
   {
     "id": "59d1f28a8f715ee9af02dfbc",
     "status": "I",
-    "isAdmin": false,
+    /*"isAdmin": false,*/
     "outletIds": ["OAAAA","OAAAB"],
     "supplierId": "SAAAA",
     "communicationId": "communicate@supplier.com",
