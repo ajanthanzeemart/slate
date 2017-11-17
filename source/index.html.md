@@ -19,8 +19,38 @@ Welcome to the Zeemart API! You can use our API to access Zeemart API endpoints,
 
 We have language bindings in Java! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 # Users
+> User collection Schema structure (JSON):
 
-## Create User
+```json
+{
+	"_id": "{ObjectId}",
+	"authType": "Zeemart",
+	"ZeemartAuth": {
+		"verificationCode": "$31$16$ZhftOGDZE5dtwkN6tglwSZilvWAGp_xgisCHX2XdRwg",
+		"ZeemartId": "roy@zeemart.asia",
+		"authToken": "14647b5d-7d29-498d-a790-f9e9651eda01",
+		"password": "$31$16$fKDabF5RUi5VvY0AvQyRnJWnOCrt8ztoghJS3IPK_68",
+		"expiryTime": 1510340887,
+		"systemGenerted": false
+	},
+	"outletIds": ["OAAAA", "OAAAB"],
+	"supplierId": "SAAAA",
+	"communication" : {
+		"email" : "communicate@supplier.com",
+		"phone": "4543543543"
+	},
+	"phone": "+1234567890",
+	"firstName": "Roy",
+	"lastName": "Wu",
+	"title": "manager",
+	"status": "A",
+	"timeCreated": 1506931336,
+	"timeUpdated": 1506931336,
+	"lastLoggedIn": 1510297687,
+	"imageURL": "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jpg"
+}
+```
+## Create Users
 ```shell
 curl "https://staging-zm-authserv.herokuapp.com/services/users"
   -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierIds: SAAAA"  -H "outletIds: OAAAA,OAAAB"
@@ -37,27 +67,31 @@ If the creation is successful, the system will send an email to registered email
 [
   {
     "ZeemartId": "newuser@zeemart.asia",
-    "type": "buyer",
     "companyRegNo": "companyRegNo",
     "outletIds": ["OAAAA", "OAAAB"],
-    "communicationId": "communicate@supplier.com",
+    "communication": {
+      "email": "communicate@supplier.com",
+      "phone": "21321313"
+    },
     "firstName": "Roy",
     "lastName": "Wu",
-    "position": "Outlet manager",
+    "title": "Outlet manager",
     "phoneNumber": "+1234567890",
-    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+    "imageURL": "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp"
   },
   {
     "ZeemartId": "secondUser@zeemart.asia",
-    "type": "buyer",
     "companyRegNo": "companyRegNo",
     "outletIds": ["OAAAC", "OAADB"],
-    "communicationId": "communicate@supplier.com",
+    "communication": {
+      "email": "communicate@supplier.com",
+      "phone": "21321313"
+    },
     "firstName": "Roy2",
     "lastName": "Wu2",
-    "position": "manager",
+    "title": "manager",
     "phoneNumber": "+1234567890",
-    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+    "imageURL": "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp"
   }
 ]
 ```
@@ -68,27 +102,31 @@ If the creation is successful, the system will send an email to registered email
 [
   {
     "ZeemartId": "newuser@zeemart.asia",
-    "type": "supplier",
     "companyRegNo": "companyRegNo",
     "supplierId": "SAADB",
-    "communicationId": "communicate@supplier.com",
+    "communication": {
+      "email": "communicate@supplier.com",
+      "phone": "21321313"
+    },
     "firstName": "Roy",
     "lastName": "Wu",
-    "position": "Outlet manager",
+    "title": "manager",
     "phoneNumber": "+1234567890",
-    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+    "imageURL": "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp"
   },
   {
     "ZeemartId": "secondUser@zeemart.asia",
-    "type": "supplier",
     "companyRegNo": "companyRegNo",
     "supplierId": "SAAAA",
-    "communicationId": "communicate@supplier.com",
+    "communication": {
+      "email": "communicate@supplier.com",
+      "phone": "21321313"
+    },
     "firstName": "Roy2",
     "lastName": "Wu2",
-    "position": "manager",
+    "title": "manager",
     "phoneNumber": "+1234567890",
-    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+    "imageURL": "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp"
   }
 ]
 ```
@@ -107,15 +145,14 @@ Either supplierIds or outletIds will be available.
 Parameter Name | Value | Mandatory? | Description
 -------------- | ----- | ---------- | -----------
 ZeemartId | newuser@zeemart.asia | Y | new User's ZeemartId <email>
-type | buyer | Y | type of the user ie. [buyer, supplier]
 companyRegNo | Z12345678 | Y | company registered number
 outletIds | OAAAA | Y/N | If type is buyer then this field is Mandatory. Comma separated values
 supplierId | SAAAA | Y/N | if type is supplier then this field is Mandatory
-firstName | "Roy" |	Y	| First name of the new user
-lastName | "Wu" | Y |	Last name of new user
-position | "Assistant Manager" | Y | Position of the user
-phoneNumber |	"+1234567890" | N | Mobile phone
-imageURL | "https://www.clinicaledge.co/img/blank_user.jpg" | N | Link to uploaded profile image
+firstName | Roy |	Y	| First name of the new user
+lastName | Wu | Y |	Last name of new user
+title |  Manager | Y | title of the user
+phoneNumber |	+1234567890 | N | Mobile phone
+imageURL | "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp" | N | Link to uploaded profile image
 
 ### Response
 > Success response body for the above request is structured like this (JSON):
@@ -181,8 +218,8 @@ Parameter Name | Value | Mandatory? | Description
 searchName | Ajan | N | Search key for search by firstName and lastName
 companyRegNo | Z12345678 | N | companyRegNo corresponding the companyName selected
 status | A | N | Values ["A" - Active, "I" - Inactive, "D" - Deleted]
-sortBy | firstName	| N |	OrderBy column [firstName|lastName]
-sort | asc |	N	| Values [asc|desc]
+sortBy | firstName	| N |	OrderBy column [firstName,lastName]
+sort | asc |	N	| Values [asc,desc]
 startPage | 1 | N |	If pagination start page number
 pageSize | 25 | N | Number of records per page
 
@@ -190,41 +227,29 @@ pageSize | 25 | N | Number of records per page
 > Success response body for the above request is structured like this (JSON):
 
 ```json
-[
-  {
-    "id": "59d1f28a8f715ee9af02dfba",
-    "ZeemartId": "newUser@zeemart.asia",
-    "authType": "Zeemart",
-    "companyName": "Pasta salsa Pte Ltd",
-    "outletIds": ["OAAAA","OAAAB"],
-    "type": "buyer",
-    "firstName": "Roy",
-    "lastName": "Wu",
-    "status": "A"
-  },
-  {
-    "id": "59d1f28a8f715ee9af02dfba",
-    "ZeemartId": "newUser@zeemart.asia",
-    "authType": "Zeemart",
-    "companyName": "Pasta salsa Pte Ltd",
-    "supplierId": "SAAAA",
-    "type": "supplier",
-    "firstName": "Roy",
-    "lastName": "Wu",
-    "status": "A"
-  },
-  {
-    "id": "59d1f28a8f715ee9af02dfbc",
-    "ZeemartId": "secondUser@zeemart.asia",
-    "authType": "Zeemart",
-    "companyName": "Zee cafe",
-    "supplierId": "SAAAA",
-    "type": "supplier",
-    "firstName": "Ajay",
-    "lastName": "Siva",
-    "status": "A"
-  }
-]
+{
+  "numberOfPages": 33,
+  "numberOfRecords": 3212,
+  "users": [
+    {
+      "id": "59d1f28a8f715ee9af02dfba",
+      "ZeemartId": "newUser@zeemart.asia",
+      "outletIds": ["OAAAA","OAAAB"],
+      "supplierId": "SAAAA",
+      "firstName": "Roy",
+      "lastName": "Wu",
+      "status": "A"
+    },
+    {
+      "id": "59d1f28a8f715ee9af02dfbc",
+      "ZeemartId": "secondUser@zeemart.asia",
+      "supplierId": "SAAAA",
+      "firstName": "Ajay",
+      "lastName": "Siva",
+      "status": "A"
+    }
+  ]
+}
 ```
 
 > Failure response body for the above request is structured like this (JSON):
@@ -276,36 +301,13 @@ id | 59d1f28a8f715ee9af02dfba | Y | user Id
 {
   "id": "59d1f28a8f715ee9af02dfba",
   "ZeemartId": "secondUser@zeemart.asia",
-  "companyName": "Pasta salsa Pte Ltd",
-  "type": "buyer",
-  "authType": "Zeemart",
-  "outlets": [
-    {
-      "id": "OAAAA",
-      "name": "Balister",
-      "address": {
-        "line1": "34 Jurong Link",
-        "line2": "BLk 301, #4-123",
-        "country": "Singapore",
-        "postal": "123456"
-      }
-    },
-    {
-      "id": "OAAAB",
-      "name": "Tampanies",
-      "address": {
-        "line1": "34 Tampanies Link",
-        "line2": "BLk 301, #4-123",
-        "country": "Singapore",
-        "postal": "543212"
-      }
-    }],
+  "outlets": ["OAAAA","OAAAB"],
   "firstName": "User In Zeemart",
   "lastName": "Wu",
   "status": "A",
   "phoneNumber": "+1234567890",
-  "position": "Outlet manager",
-  "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  "title": "manager",
+  "imageURL": "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp"
 }
 ```
 > Success response body for supplier (JSON):
@@ -314,26 +316,13 @@ id | 59d1f28a8f715ee9af02dfba | Y | user Id
 {
   "id": "59d1f28a8f715ee9af02dfba",
   "ZeemartId": "secondUser@zeemart.asia",
-  "companyName": "Pasta salsa Pte Ltd",
-  "type": "supplier",
-  "authType": "Zeemart",
-  "supplier":
-  {
-    "id": "SAAAB",
-    "name": "Tampanies",
-    "address": {
-      "line1": "34 Tampanies Link",
-      "line2": "BLk 301, #4-123",
-      "country": "Singapore",
-      "postal": "543212"
-    }
-  },
+  "supplier": "SAAAB",
   "firstName": "User In Zeemart",
   "lastName": "Wu",
   "status": "A",
   "phoneNumber": "+1234567890",
-  "position": "Outlet manager",
-  "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+  "title": "manager",
+  "imageURL": "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp"
 }
 ```
 
@@ -370,26 +359,33 @@ Update the existing user's details. Only the fields sent will be updated.
   {
     "id": "59d1f28a8f715ee9af02dfba",
     "status": "A",
+    "ZeemartId" : "editedUser@zeemart.asia",
     "outletId": ["OAAAA","OAAAB"],
     "supplierId": "SAAAA",
-    "communicationId": "communicate@supplier.com",
+    "communication": {
+      "email": "communicate@supplier.com"
+    },
     "firstName": "Roy",
     "lastName": "Wu",
-    "position": "Outlet manager",
+    "title": "manager",
     "phoneNumber": "+1234567890",
-    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+    "imageURL": "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp"
   },
   {
     "id": "59d1f28a8f715ee9af02dfbc",
     "status": "I",
+    "ZeemartId" : "editedUser2@zeemart.asia",
     "outletIds": ["OAAAA","OAAAB"],
     "supplierId": "SAAAA",
-    "communicationId": "communicate@supplier.com",
+    "communication": {
+      "email": "communicate@supplier.com",
+      "phone": "21345643"
+    },
     "firstName": "Roy2",
     "lastName": "Wu2",
-    "position": "manager",
+    "title": "manager",
     "phoneNumber": "+1234567890",
-    "imageURL": "https://www.clinicaledge.co/img/blank_user.jpg"
+    "imageURL": "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp"
   }
 ]
 ```
@@ -406,15 +402,15 @@ outletIds | OAAAA,OAAAB | Selected Outlet Ids
 Parameter Name | Value | Mandatory? | Description
 -------------- | ----- | ---------- | -----------
 id | 59d1f28a8f715ee9af02dfba | Y | user Id
+ZeemartId | user@zeemart.asia | N | email change
 status | A | N | Active or innactive user
-isAdmin | true | N | true or false - is admin of the company?
 outletId | ["OAAAA"] | N | Linked OutletIds
 supplierId | ["SAAAA"]	| N |	Linked SupplierIds
 firstName | "Roy1" |	N	| First name of the new user
 lastName | "Wu1" | N |	Last name of new user
-position | "Assistant Manager" | N | Position of the user
+title | "Assistant Manager" | N | title of the user
 phoneNumber |	"+1234567890" | N | Mobile phone
-imageURL | "https://www.clinicaledge.co/img/blank_user.jpg" | N | Link to uploaded profile image
+imageURL | "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332432432/blank_user.jp" | N | Link to uploaded profile image
 
 ### Response
 > Full|Partial Success response body for the above request is structured like this (JSON):
@@ -521,6 +517,67 @@ Error Code | Reason
 401 | if authentication token not matched
 403 | If permissions are denied for this user for the action
 
+
+
+# Image Upload
+
+## Image upload to image server
+```shell
+curl "http://dev.image.zeemart.asia/server/php"
+  -H "authType: Zeemart" -H "mudra: mudra-token"
+```
+Used to upload and store image in the FTP server for product creation.
+
+### HTTP Request
+`POST https://staging-zm-authserv.herokuapp.com/services/users`
+
+#### Request Headers
+Header | Value | Description
+------ | ----- | -----------
+Content-Type | application/json | Fixed value
+authType | Zeemart | Fixed Value
+mudra | mudra-token | Taken from Login
+
+#### Request Body description
+Parameter Name | Value | Mandatory? | Description
+-------------- | ----- | ---------- | -----------
+file[] | <image files> | Y | images with unique names when multiple images uploaded
+supplierId | SAAAA | Y | supplier id
+uniqueUploadID | Zeemart-2334432424 | Y | Unique upload Id, typically
+
+### Response
+> Full|Partial Success response body for the above request is structured like this (JSON):
+
+```json
+{
+	"file": [{
+		"name": "qwertyui.jpg",
+		"size": 316625,
+		"type": "image\/jpeg",
+		"url": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/qwertyui.jpg",
+		"mediumUrl": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/medium\/qwertyui.jpg",
+		"thumbnailUrl": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/thumbnail\/qwertyui.jpg",
+		"deleteUrl": "http:\/\/dev.image.zeemart.asia\/server\/php\/?fil=qwertyui.jpg&supplierId=SAAAZ&uniqueUploadID=Zeemart-1234567876",
+		"deleteType": "DELETE"
+	}, {
+		"name": "tg.jpg",
+		"size": 316625,
+		"type": "image\/jpeg",
+		"url": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/tg.jpg",
+		"mediumUrl": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/medium\/tg.jpg",
+		"thumbnailUrl": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/thumbnail\/tg.jpg",
+		"deleteUrl": "http:\/\/dev.image.zeemart.asia\/server\/php\/?fil=tg.jpg&supplierId=SAAAZ&uniqueUploadID=Zeemart-1234567876",
+		"deleteType": "DELETE"
+	}]
+}
+```
+
+#### Error codes
+
+Error Code | Reason
+----------- | -----------
+401 | if authentication token not matched
+403 | If permissions are denied for this user for the action
 
 
 
