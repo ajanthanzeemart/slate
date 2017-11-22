@@ -34,7 +34,7 @@ We have language bindings in Java! You can view code examples in the dark area t
 		"systemGenerted": false
 	},
 	"outletIds": ["OAAAA", "OAAAB"],
-	"supplierId": "SAAAA",
+	"supplierIds": "SAAAA",
 	"communication" : {
 		"email" : "communicate@supplier.com",
 		"phone": "4543543543"
@@ -103,7 +103,7 @@ If the creation is successful, the system will send an email to registered email
   {
     "ZeemartId": "newuser@zeemart.asia",
     "companyRegNo": "companyRegNo",
-    "supplierId": "SAADB",
+    "supplierIds": ["SAADB"],
     "communication": {
       "email": "communicate@supplier.com",
       "phone": "21321313"
@@ -117,7 +117,7 @@ If the creation is successful, the system will send an email to registered email
   {
     "ZeemartId": "secondUser@zeemart.asia",
     "companyRegNo": "companyRegNo",
-    "supplierId": "SAAAA",
+    "supplierIds": ["SAAAA"],
     "communication": {
       "email": "communicate@supplier.com",
       "phone": "21321313"
@@ -147,7 +147,7 @@ Parameter Name | Value | Mandatory? | Description
 ZeemartId | newuser@zeemart.asia | Y | new User's ZeemartId <email>
 companyRegNo | Z12345678 | Y | company registered number
 outletIds | OAAAA | Y/N | If type is buyer then this field is Mandatory. Comma separated values
-supplierId | SAAAA | Y/N | if type is supplier then this field is Mandatory
+supplierIds | SAAAA | Y/N | if type is supplier then this field is Mandatory
 firstName | Roy |	Y	| First name of the new user
 lastName | Wu | Y |	Last name of new user
 title |  Manager | Y | title of the user
@@ -159,17 +159,8 @@ imageURL | "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332
 
 ```json
 {
-  "result": [
-    {
-      "id": "59d1f28a8f715ee9af02dfba",
-      "ZeemartId" : "newuser@zeemart.asia",
-      "status" : "success"
-    },{
-      "ZeemartId" : "secondUser@zeemart.asia",
-      "status" : "failure"
-    }
-  ],
-  "status": "success|partial"
+  "inserted": 2 ,
+  "status": "success"
 }
 ```
 
@@ -209,7 +200,7 @@ Header | Value | Description
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
-supplierIds | SAAAA,SAAAB | Selected Supplier Ids
+supplierIds | SAAAA | Selected Supplier Ids
 outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
 #### Request Query description
@@ -235,7 +226,7 @@ pageSize | 25 | N | Number of records per page
       "id": "59d1f28a8f715ee9af02dfba",
       "ZeemartId": "newUser@zeemart.asia",
       "outletIds": ["OAAAA","OAAAB"],
-      "supplierId": "SAAAA",
+      "supplierIds": "SAAAA",
       "firstName": "Roy",
       "lastName": "Wu",
       "status": "A"
@@ -243,7 +234,7 @@ pageSize | 25 | N | Number of records per page
     {
       "id": "59d1f28a8f715ee9af02dfbc",
       "ZeemartId": "secondUser@zeemart.asia",
-      "supplierId": "SAAAA",
+      "supplierIds": ["SAAAA"],
       "firstName": "Ajay",
       "lastName": "Siva",
       "status": "A"
@@ -286,7 +277,7 @@ Header | Value | Description
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
-supplierIds | SAAAA,SAAAB | Selected Supplier Ids
+supplierIds | SAAAA | Selected Supplier Ids
 outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
 #### Request Query description
@@ -301,7 +292,7 @@ id | 59d1f28a8f715ee9af02dfba | Y | user Id
 {
   "id": "59d1f28a8f715ee9af02dfba",
   "ZeemartId": "secondUser@zeemart.asia",
-  "outlets": ["OAAAA","OAAAB"],
+  "outletIds": ["OAAAA","OAAAB"],
   "firstName": "User In Zeemart",
   "lastName": "Wu",
   "status": "A",
@@ -316,7 +307,7 @@ id | 59d1f28a8f715ee9af02dfba | Y | user Id
 {
   "id": "59d1f28a8f715ee9af02dfba",
   "ZeemartId": "secondUser@zeemart.asia",
-  "supplier": "SAAAB",
+  "supplierIds": ["SAAAB"],
   "firstName": "User In Zeemart",
   "lastName": "Wu",
   "status": "A",
@@ -346,7 +337,7 @@ Error Code | Reason
 ## Edit User
 ```shell
 curl "https://staging-zm-authserv.herokuapp.com/services/users"
-  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SAAAA" -H "outletIds: OAAAA,OAAAB"
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierIds: SAAAA" -H "outletIds: OAAAA,OAAAB"
 ```
 Update the existing user's details. Only the fields sent will be updated.
 
@@ -361,7 +352,7 @@ Update the existing user's details. Only the fields sent will be updated.
     "status": "A",
     "ZeemartId" : "editedUser@zeemart.asia",
     "outletId": ["OAAAA","OAAAB"],
-    "supplierId": "SAAAA",
+    "supplierIds": ["SAAAA"],
     "communication": {
       "email": "communicate@supplier.com"
     },
@@ -376,7 +367,7 @@ Update the existing user's details. Only the fields sent will be updated.
     "status": "I",
     "ZeemartId" : "editedUser2@zeemart.asia",
     "outletIds": ["OAAAA","OAAAB"],
-    "supplierId": "SAAAA",
+    "supplierIds": ["SAAAA"],
     "communication": {
       "email": "communicate@supplier.com",
       "phone": "21345643"
@@ -395,7 +386,7 @@ Header | Value | Description
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
-supplierIds | SAAAA,SAAAB | Selected Supplier Ids
+supplierIds | SAAAA | Selected Supplier Ids
 outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
 #### Request Body description
@@ -405,7 +396,7 @@ id | 59d1f28a8f715ee9af02dfba | Y | user Id
 ZeemartId | user@zeemart.asia | N | email change
 status | A | N | Active or innactive user
 outletId | ["OAAAA"] | N | Linked OutletIds
-supplierId | ["SAAAA"]	| N |	Linked SupplierIds
+supplierIds | ["SAAAA"]	| N |	Linked supplierIds
 firstName | "Roy1" |	N	| First name of the new user
 lastName | "Wu1" | N |	Last name of new user
 title | "Assistant Manager" | N | title of the user
@@ -417,16 +408,8 @@ imageURL | "https://www.dev.image.zeemart.asia/uploads/SAAAA/Zeemart-23223464332
 
 ```json
 {
-  "result": [
-    {
-      "id": "59d1f28a8f715ee9af02dfba",
-      "status": "success"
-    }, {
-      "id": "59d1f28a8f715ee9af02dfbc",
-      "status": "failure"
-    }
-  ],
-  "status": "success|partial"
+  "result": {},
+  "status": "success"
 }
 ```
 
@@ -472,7 +455,7 @@ Header | Value | Description
 Content-Type | application/json | Fixed value
 authType | Zeemart | Fixed Value
 mudra | mudra-token | Taken from Login
-supplierIds | SAAAA,SAAAB | Selected Supplier Ids
+supplierIds | SAAAA | Selected Supplier Ids
 outletIds | OAAAA,OAAAB | Selected Outlet Ids
 
 #### Request Body description
@@ -516,72 +499,6 @@ Error Code | Reason
 ----------- | -----------
 401 | if authentication token not matched
 403 | If permissions are denied for this user for the action
-
-
-
-# Image Upload
-
-## Image upload to image server
-```shell
-curl "http://dev.image.zeemart.asia/server/php"
-  -H "authType: Zeemart" -H "mudra: mudra-token"
-```
-Used to upload and store image in the FTP server for product creation.
-
-### HTTP Request
-`POST https://staging-zm-authserv.herokuapp.com/services/users`
-
-#### Request Headers
-Header | Value | Description
------- | ----- | -----------
-Content-Type | application/json | Fixed value
-authType | Zeemart | Fixed Value
-mudra | mudra-token | Taken from Login
-
-#### Request Body description
-Parameter Name | Value | Mandatory? | Description
--------------- | ----- | ---------- | -----------
-file[] | <image files> | Y | images with unique names when multiple images uploaded
-supplierId | SAAAA | Y | supplier id
-uniqueUploadID | Zeemart-2334432424 | Y | Unique upload Id, typically
-
-### Response
-> Full|Partial Success response body for the above request is structured like this (JSON):
-
-```json
-{
-	"file": [{
-		"name": "qwertyui.jpg",
-		"size": 316625,
-		"type": "image\/jpeg",
-		"url": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/qwertyui.jpg",
-		"mediumUrl": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/medium\/qwertyui.jpg",
-		"thumbnailUrl": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/thumbnail\/qwertyui.jpg",
-		"deleteUrl": "http:\/\/dev.image.zeemart.asia\/server\/php\/?fil=qwertyui.jpg&supplierId=SAAAZ&uniqueUploadID=Zeemart-1234567876",
-		"deleteType": "DELETE"
-	}, {
-		"name": "tg.jpg",
-		"size": 316625,
-		"type": "image\/jpeg",
-		"url": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/tg.jpg",
-		"mediumUrl": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/medium\/tg.jpg",
-		"thumbnailUrl": "http:\/\/dev.image.zeemart.asia\/uploads\/SAAAZ\/Zeemart-1234567876\/thumbnail\/tg.jpg",
-		"deleteUrl": "http:\/\/dev.image.zeemart.asia\/server\/php\/?fil=tg.jpg&supplierId=SAAAZ&uniqueUploadID=Zeemart-1234567876",
-		"deleteType": "DELETE"
-	}]
-}
-```
-
-#### Error codes
-
-Error Code | Reason
------------ | -----------
-401 | if authentication token not matched
-403 | If permissions are denied for this user for the action
-
-
-
-
 
 
 # Products
@@ -1046,3 +963,255 @@ Parameter | Default | Description
 sku | null | sku for which details needed
 
 # Market List
+
+## Create Market List (Supplier)
+
+```shell
+curl "https://staging-zm-inventory.herokuapp.com/services/marketList"
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SupplierId"
+
+```
+
+This endpoint creates new Market List for buyer.
+
+### HTTP Request
+
+`POST https://staging-zm-inventory.herokuapp.com/services/marketList`
+
+> Request body for the above command structured like this (JSON):
+
+```json
+
+{
+    "outletIds": ["OAAAA", "OAAAB", "OAAAE"],
+    "products": [
+		{
+			"sku": "SAAAA0000001",
+			"productName": "abc sauce",
+			"supplierProductCode": "ABC1234",
+			"priceList": [
+				{
+					"price": 0.01,
+					"unitSize": "gm",
+					"moq": 100,
+					"visible": true
+				},
+				{
+					"price": 90,
+					"unitSize": "kg",
+					"moq": 1,
+					"visible": true
+				}
+			]
+		},
+		{
+			"sku": "SAAAA0000002",
+			"productName": "xyz sauce",
+			"supplierProductCode": "",
+			"priceList": [
+				{
+					"price": 90,
+					"unitSize": "ltr",
+					"moq": 2,
+					"visible": true
+				},
+				{
+					"price": 1,
+					"unitSize": "ml",
+					"moq": 100,
+					"visible": true
+				}
+			]
+		}
+	]
+}
+
+```
+> The above command returns JSON structured like this:
+
+```json
+
+{
+	"marketList": "<marketListId>"
+}
+
+```
+
+### Headers
+
+Header | Value
+--------- | -------
+Content-Type | application/json
+authType | Zeemart
+mudra | mudra-token
+supplierId | SupplierId
+
+mudra-token would be taken from login
+
+## Edit Market List (Supplier)
+
+```shell
+curl "https://staging-zm-inventory.herokuapp.com/services/marketList"
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "supplierId: SupplierId"
+
+```
+
+This endpoint edits Market List for buyer.
+
+### HTTP Request
+
+`PUT https://staging-zm-inventory.herokuapp.com/services/marketList`
+
+> Request body for the above command structured like this (JSON):
+
+```json
+
+{
+    "outletIds": ["OAAAA", "OAAAB", "OAAAE"],
+    "products": [
+		{
+			"sku": "SAAAA0000001",
+			"productName": "abc sauce",
+			"supplierProductCode": "ABC1234",
+			"priceList": [
+				{
+					"price": 0.01,
+					"unitSize": "gm",
+					"moq": 100,
+					"visible": true
+				},
+				{
+					"price": 90,
+					"unitSize": "kg",
+					"moq": 1,
+					"visible": true
+				}
+			]
+		},
+		{
+			"sku": "SAAAA0000001",
+			"productName": "xyz sauce",
+			"supplierProductCode": "",
+			"priceList": [
+				{
+					"price": 90,
+					"unitSize": "ltr",
+					"moq": 2
+				},
+				{
+					"price": 1,
+					"unitSize": "ml",
+					"moq": 100
+				}
+			]
+		}
+	]
+}
+
+```
+
+> The above command returns JSON structured like this:
+
+```json
+
+{
+	"marketList": "<marketListId>"
+}
+
+```
+
+### Headers
+
+Header | Value
+--------- | -------
+Content-Type | application/json
+authType | Zeemart
+mudra | mudra-token
+supplierId | SupplierId
+
+mudra-token would be taken from login
+
+## Customize Market List (Outlet)
+
+```shell
+curl "https://staging-zm-inventory.herokuapp.com/services/marketList"
+  -H "authType: Zeemart" -H "mudra: mudra-token" -H "outletId: outletId"
+
+```
+
+This endpoint customize Market List for individual outlet.
+
+### HTTP Request
+
+`PUT https://staging-zm-inventory.herokuapp.com/services/marketList`
+
+> Request body for the above command structured like this (JSON):
+
+```json
+
+{
+    "supplierId": "SAAAA",
+    "products": [
+		{
+			"sku": "SAAAA0000001",
+			"productName": "abc sauce",
+			"supplierProductCode": "ABC1234",
+			"priceList": [
+				{
+					"price": 0.01,
+					"unitSize": "gm",
+					"moq": 100,
+					"visible": true
+				},
+				{
+					"price": 90,
+					"unitSize": "kg",
+					"moq": 1,
+					"visible": false
+				}
+			]
+		},
+		{
+			"sku": "SAAAA0000001",
+			"productName": "xyz sauce",
+			"supplierProductCode": "",
+			"priceList": [
+				{
+					"price": 90,
+					"unitSize": "ltr",
+					"moq": 2,
+					"visible": true
+				},
+				{
+					"price": 1,
+					"unitSize": "ml",
+					"moq": 100,
+					"visible": false
+				}
+			]
+		}
+	]
+}
+
+```
+
+> The above command returns JSON structured like this:
+
+```json
+
+{
+	"marketList": "<marketListId>"
+}
+
+```
+
+### Headers
+
+Header | Value
+--------- | -------
+Content-Type | application/json
+authType | Zeemart
+mudra | mudra-token
+outletId | outletId
+
+mudra-token would be taken from login
